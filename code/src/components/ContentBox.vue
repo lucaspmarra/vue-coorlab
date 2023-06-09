@@ -5,8 +5,11 @@
         <h1><i></i>Insira o destino e o peso</h1>
         <b-form-group class="w-100" id="destino" label="Destino">
 
-          <b-form-select v-model="selected" :options="data"></b-form-select>
-
+          <b-form-select v-model="selected">
+            <option v-for="city in uniqueCities" :key="city" :value="city">
+              {{ city }}
+            </option>
+          </b-form-select>
         </b-form-group>
 
         <b-form-group id="peso" label="Peso">
@@ -18,10 +21,18 @@
         </b-form-group>
       </b-form>
     </div>
-    <div class="result">
-      <h2>Resultado:</h2>
-      <pre>{{ result }}</pre>
+
+    <div class="result" v-if="selected">
+      <h2>Cidade selecionada: {{ selected }}</h2>
+      <div v-for="option in filteredOptions" :key="option.id">
+        <h3>{{ option.name }}</h3>
+        <p>Custo de Frete até 100Kg [R$/Kg]: {{ option.cost_transport_light }}</p>
+        <p>Custo de Frete mais de 100Kg [R$/Kg]: {{ option.cost_transport_heavy }}</p>
+        <p>Cidade de destino: {{ option.city }}</p>
+        <p>Tempo de entrega: {{ option.lead_time }}</p>
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -42,14 +53,27 @@ export default {
       result: null,
     };
   },
-  computed: {},
-  methods: {
+  computed: {
+    uniqueCities () {
+      return [...new Set(this.data.map((data) => data.city))];
+    },
+    filteredOptions () {
+      return this.selected ? this.data.filter((data) => data.city === this.selected) : [];
+    },
+  },
+/*   methods: {
     submitForm () {
       if (!this.selected || !this.weight) {
         alert('Por favor, selecione o destino e insira o peso.');
         return;
       }
     }
+  }, */
+  watch: {
+    selectedCity (newCity) {
+      console.log(`Cidade selecionada: ${newCity}`);
+      this.fetchTransportData(newCity);
+    },
   },
 }
 </script>

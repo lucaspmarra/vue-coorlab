@@ -5,35 +5,21 @@
         <b class="ml-2"><b-icon icon="truck"></b-icon> {{ appName }}</b>
       </b-navbar-brand>
     </b-navbar>
-    <!-- <ContentBox :data="options"/> -->
-    <b-form-select v-model="selectedCity">
-      <option v-for="city in uniqueCities" :key="city" :value="city">
-        {{ city }}
-      </option>
-    </b-form-select>
-    <div v-if="selectedCity">
-      <h2>Cidade selecionada: {{ selectedCity }}</h2>
-      <div v-for="option in filteredOptions" :key="option.id">
-        <h3>{{ option.name }}</h3>
-        <p>Custo de Frete até 100Kg [R$/Kg]: {{ option.cost_transport_light }}</p>
-        <p>Custo de Frete mais de 100Kg [R$/Kg]: {{ option.cost_transport_heavy }}</p>
-        <p>Cidade de destino: {{ option.city }}</p>
-        <p>Tempo de entrega: {{ option.lead_time }}</p>
-      </div>
-    </div>
+    <ContentBox :data="options" />
+
   </div>
 </template>
 
 <script>
 import { BNavbar, BNavbarBrand } from 'bootstrap-vue'
 import axios from 'axios'
-// import ContentBox from './ContentBox.vue'
+import ContentBox from './ContentBox.vue'
 
 export default {
   components: {
     BNavbar,
     BNavbarBrand,
-    // ContentBox,
+    ContentBox,
   },
   data () {
     return {
@@ -59,20 +45,6 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    }
-  },
-  computed: {
-    uniqueCities () {
-      return [...new Set(this.options.map((option) => option.city))];
-    },
-    filteredOptions () {
-      return this.selectedCity ? this.options.filter((option) => option.city === this.selectedCity) : [];
-    },
-  },
-  watch: {
-    selectedCity (newCity) {
-      console.log(`Cidade selecionada: ${newCity}`);
-      this.fetchTransportData(newCity);
     },
   },
   created () {
