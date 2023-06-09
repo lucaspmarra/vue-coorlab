@@ -14,6 +14,7 @@ import {
   BNavbar,
   BNavbarBrand,
 } from 'bootstrap-vue'
+import axios from 'axios'
 
 export default {
   components: {
@@ -30,12 +31,16 @@ export default {
   created() {
     // Implemente aqui o GET dos dados da API REST
     // para que isso ocorra na inicialização da pagina
+    this.getAPI()
     this.appName = 'Melhor Frete'
   },
   methods: {
     // Implemente aqui os metodos utilizados na pagina
     methodFoo() {
       console.log(this.appName)
+    },
+    getAPI(){
+      axios.get('http://localhost:3000/transport').then(response => console.log(response.data)).catch(error => console.error(error))
     },
   },
 }
